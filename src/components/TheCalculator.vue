@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 </script>
 
 <template>
@@ -87,7 +87,11 @@ label {
 .input-group {
 	display: flex;
 	border: 1px solid;
-	border-radius: 3px;
+	border-radius: 5px;
+
+	& span, input {
+		border-radius: inherit;
+	}
 
 	& span {
 		padding: .5em .8em;
@@ -114,7 +118,7 @@ label {
 
 .radio-wrapper {
 	border: 1px solid;
-	border-radius: 2px;
+	border-radius: 5px;
 	margin: 6px 0;
 	padding: .5em;
 
