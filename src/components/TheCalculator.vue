@@ -5,7 +5,7 @@
 	<form action="">
 		<hgroup>
 			<h1>Mortgage Calculator</h1>
-			<button type="button">Clear All</button>
+			<button type="reset">Clear All</button>
 		</hgroup>
 
 		<div>
@@ -36,10 +36,12 @@
 			<label for="type">Mortgage Type</label>
 			<div class="radio-wrapper">
 				<input type="radio" name="type" id="type">
+				<div class="fake-radio"></div>
 				<span>Repayment</span>
 			</div>
 			<div class="radio-wrapper">
 				<input type="radio" name="type" id="type">
+				<div class="fake-radio"></div>
 				<span>Interest Only</span>
 			</div>
 		</div>
@@ -76,6 +78,7 @@ hgroup {
 		color: inherit;
 		font-weight: 500;
 		text-decoration: underline;
+		cursor: pointer;
 	}
 }
 
@@ -102,6 +105,13 @@ label {
 	& input {
 		width: 100%;
 		border: none;
+		outline: none;
+		cursor: pointer;
+
+		font-family: inherit;
+		font-weight: 700;
+		padding: 0 1em;
+		color: var(--Slate-900);
 
 		&[type=number] {
 			appearance: textfield;
@@ -114,19 +124,63 @@ label {
 			}
 		}
 	}
+
+	&:has(input:focus-visible), &:hover {
+		border-color: var(--Lime);
+
+		span {
+			background-color: var(--Lime);
+			color: var(--Slate-900);
+		}
+	}
 }
 
 .radio-wrapper {
+	position: relative;
 	border: 1px solid;
 	border-radius: 5px;
 	margin: 6px 0;
 	padding: .5em;
+	cursor: pointer;
 
 	& span {
 		margin: 0 7px;
 		font-weight: 700;
 		color: var(--Slate-900);
 	}
+
+	.fake-radio {
+		display: inline-block;
+		outline: 1px solid;
+		outline-offset: 2px;
+		aspect-ratio: 1/1;
+		width: 10px;
+		border-radius: 50%;
+	}
+
+	input[type=radio] {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		inset: 0;
+		margin: 0;
+		appearance: none;
+		cursor: pointer;
+	}
+}
+
+.radio-wrapper:has(input:checked), .radio-wrapper:hover {
+	border-color: var(--Lime);
+	background-color: hsl(from var(--Lime) h s l / .25);
+}
+
+.radio-wrapper:has(input:checked) {
+	
+	.fake-radio {
+		outline-color: var(--Lime);
+		background-color: var(--Lime);
+	}
+
 }
 
 div:has(.input-wrapper) {
@@ -144,5 +198,11 @@ div:has(.input-wrapper) {
 	background-color: var(--Lime);
 	border: none;
 	border-radius: 30px;
+	cursor: pointer;
+}
+
+.input-wrapper, .radio-wrapper, .fake-radio, span {
+	transition-property: color border-color outline-color background-color;
+	transition-duration: .3s;
 }
 </style>
