@@ -171,6 +171,9 @@ label {
 
 .radio-wrapper:has(input:checked), .radio-wrapper:hover {
 	border-color: var(--Lime);
+}
+
+.radio-wrapper:has(input:checked) {
 	background-color: hsl(from var(--Lime) h s l / .25);
 }
 
@@ -199,6 +202,10 @@ div:has(.input-wrapper) {
 	border: none;
 	border-radius: 30px;
 	cursor: pointer;
+
+	&:hover {
+		background-color: hsl(from var(--Lime) h s l / .75);
+	}
 }
 
 .input-wrapper, .radio-wrapper, .fake-radio, span {
