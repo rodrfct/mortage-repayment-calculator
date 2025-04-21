@@ -1,25 +1,55 @@
 <script setup lang="ts">
+import { ref, useTemplateRef } from 'vue';
+
+const mortgageAmount = useTemplateRef<HTMLInputElement | null>('mortgage-amount')
+const mortgageTerm = useTemplateRef<HTMLInputElement | null>('mortgage-term')
+const mortgageInterestRate = useTemplateRef<HTMLInputElement | null>('mortgage-interest-rate')
+const mortgageType = ref<(HTMLInputElement | null)[]>([])
+
+const inputs = [ mortgageAmount, mortgageTerm, mortgageInterestRate ]
+
+function handleSubmit() {
+	let completed = true;
+
+	for (const i  of inputs) {
+		console.log(i.value)
+		if (!i.value?.value.trim()) {
+			completed = false;
+			i.value?.parentElement?.classList.add("missing-field")
+		}
+	}
+
+	for (const r of mortgageType.value) {
+		console.log(r)
+		if (r?.checked) {
+			completed = false;
+			break;
+		} 
+		r?.parentElement?.parentElement?.classList.add("missing-field")
+		console.log(r?.parentElement?.parentElement)
+	}
+}
 </script>
 
 <template>
-	<form action="">
+	<form @submit.prevent="handleSubmit">
 		<hgroup>
 			<h1>Mortgage Calculator</h1>
 			<button type="reset">Clear All</button>
 		</hgroup>
 
-		<div>
+		<div class="input-wrapper">
 			<label for="amount">Mortgage Amount</label>
 			<div class="input-group">
 				<span class="input-decor">£</span>
-				<input type="number" name="amount" id="amount">
+				<input ref="mortgage-amount" type="number" name="amount" id="amount">
 			</div>
 		</div>
 		<div>
 			<div class="input-wrapper">
 				<label for="term">Mortgage Term</label>
 				<div class="input-group">
-					<input type="number" name="term" id="term">
+					<input ref="mortgage-term" type="number" name="term" id="term" >
 					<span class="input-decor">years</span>
 				</div>
 			</div>
@@ -27,20 +57,20 @@
 			<div class="input-wrapper">
 				<label for="interest-rate">Interest Rate</label>
 				<div class="input-group">
-					<input type="number" name="interest-rate" id="interest-rate">
+					<input ref="mortgage-interest-rate" type="number" name="interest-rate" id="interest-rate" >
 					<span class="input-decor">%</span>
 				</div>
 			</div>
 		</div>
-		<div>
+		<div class="radio-wrapper">
 			<label for="type">Mortgage Type</label>
-			<div class="radio-wrapper">
-				<input type="radio" name="type" id="type">
+			<div class="radio-group">
+				<input :ref="(el) => {mortgageType[0] = el}" type="radio" name="type" id="type" >
 				<div class="fake-radio"></div>
 				<span>Repayment</span>
 			</div>
-			<div class="radio-wrapper">
-				<input type="radio" name="type" id="type">
+			<div class="radio-group">
+				<input :ref="(el) => {mortgageType[1] = el}" type="radio" name="type" id="type" >
 				<div class="fake-radio"></div>
 				<span>Interest Only</span>
 			</div>
@@ -135,7 +165,7 @@ label {
 	}
 }
 
-.radio-wrapper {
+.radio-group {
 	position: relative;
 	border: 1px solid;
 	border-radius: 5px;
@@ -169,15 +199,15 @@ label {
 	}
 }
 
-.radio-wrapper:has(input:checked), .radio-wrapper:hover {
+.radio-group:has(input:checked), .radio-group:hover {
 	border-color: var(--Lime);
 }
 
-.radio-wrapper:has(input:checked) {
+.radio-group:has(input:checked) {
 	background-color: hsl(from var(--Lime) h s l / .25);
 }
 
-.radio-wrapper:has(input:checked) {
+.radio-group:has(input:checked) {
 	
 	.fake-radio {
 		outline-color: var(--Lime);
@@ -208,8 +238,26 @@ div:has(.input-wrapper) {
 	}
 }
 
-.input-wrapper, .radio-wrapper, .fake-radio, span {
+.input-wrapper, .radio-group, .fake-radio, span {
 	transition-property: color border-color outline-color background-color;
 	transition-duration: .3s;
 }
+
+.missing-field {
+	border-color: var(--Red);
+
+	input + span, span:first-child {
+		color: var(--White);
+		background-color: var(--Red);
+	}
+
+}
+
+.input-wrapper:has(.missing-field)::after, .radio-wrapper.missing-field::after {
+	content: "Field is required";
+	display: inline-block;
+	margin-top: .6em;
+	color: var(--Red);
+	font-weight: 500;
+} 
 </style>
