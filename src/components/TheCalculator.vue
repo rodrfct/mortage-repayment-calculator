@@ -110,6 +110,14 @@ hgroup {
 		text-decoration: underline;
 		cursor: pointer;
 	}
+
+	@media (width < 400px) {
+		display: initial;
+
+		button {
+			margin-top: 1em;
+		}
+	}
 }
 
 label {
@@ -219,12 +227,17 @@ label {
 div:has(.input-wrapper) {
 	display: flex;
 	gap: 15px;
+
+	@media (width < 400px) {
+		flex-direction: column;
+	}
 }
 
 #calculate {
-	padding: 8px 30px;
+	padding: 10px 25px;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: .5em;
 	font-weight: 700;
 	color: var(--Slate-900);
@@ -235,6 +248,10 @@ div:has(.input-wrapper) {
 
 	&:hover {
 		background-color: hsl(from var(--Lime) h s l / .75);
+	}
+
+	@media (width < 400px) {
+		width: 100%;
 	}
 }
 

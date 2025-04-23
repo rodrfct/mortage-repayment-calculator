@@ -51,6 +51,10 @@ const repayments = 1797.74
 		color: var(--White);
 	}
 
+	@media (width < 400px) {
+		border-radius: 0;
+	}
+
 }
 
 .repayments {

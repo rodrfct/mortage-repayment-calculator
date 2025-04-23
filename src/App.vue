@@ -19,7 +19,8 @@ import TheResult from './components/TheResult.vue';
 	margin: auto;
 	max-width: 900px;
 
-	@media (width < 375px) {
+	@media (width < 400px) {
+		border-radius: 0;
 		grid-template-columns: 1fr;
 	}
 }
