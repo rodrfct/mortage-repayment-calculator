@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from 'vue';
+import type { ResultInterface } from '../App.vue'
+
+const emit = defineEmits(['calculate'])
 
 const mortgageAmount = useTemplateRef<HTMLInputElement | null>('mortgage-amount')
 const mortgageTerm = useTemplateRef<HTMLInputElement | null>('mortgage-term')
@@ -8,25 +11,49 @@ const mortgageType = ref<(HTMLInputElement | null)[]>([])
 
 const inputs = [ mortgageAmount, mortgageTerm, mortgageInterestRate ]
 
-function handleSubmit() {
+function calculateRepayment(mortgageType: "total" | "interest"): ResultInterface {
+	const interest = parseInt(mortgageInterestRate.value?.value) / 100 * parseInt(mortgageAmount.value?.value);
+	if (mortgageType == "total") {
+		return {
+			total: parseInt(mortgageAmount.value?.value) + interest,
+			monthly: ((parseInt(mortgageAmount.value?.value) + interest) / (mortgageTerm.value?.value * 12))
+		}
+	} else {
+		return {
+			total: interest,
+			monthly: (interest / (parseInt(mortgageTerm.value?.value) * 12))
+		} 
+	}
+}
+
+function handleSubmit(): void {
 	let completed = true;
 
 	for (const i  of inputs) {
-		console.log(i.value)
 		if (!i.value?.value.trim()) {
 			completed = false;
 			i.value?.parentElement?.classList.add("missing-field")
+		} else {
+			i.value?.parentElement?.classList.remove("missing-field")
 		}
 	}
 
+	let type
+
 	for (const r of mortgageType.value) {
-		console.log(r)
 		if (r?.checked) {
-			completed = false;
+			r?.parentElement?.parentElement?.classList.remove("missing-field")
+			type = r?.value
 			break;
-		} 
-		r?.parentElement?.parentElement?.classList.add("missing-field")
-		console.log(r?.parentElement?.parentElement)
+		} else {
+			r?.parentElement?.parentElement?.classList.add("missing-field")
+		}
+	}
+
+	completed = !type ? false : completed
+
+	if (completed) {
+		emit('calculate', calculateRepayment(type))
 	}
 }
 </script>
@@ -65,12 +92,12 @@ function handleSubmit() {
 		<div class="radio-wrapper">
 			<label for="type">Mortgage Type</label>
 			<div class="radio-group">
-				<input :ref="(el) => {mortgageType[0] = el}" type="radio" name="type" id="type" >
+				<input :ref="(el) => {mortgageType[0] = el}" type="radio" name="type" id="type" value="total">
 				<div class="fake-radio"></div>
 				<span>Repayment</span>
 			</div>
 			<div class="radio-group">
-				<input :ref="(el) => {mortgageType[1] = el}" type="radio" name="type" id="type" >
+				<input :ref="(el) => {mortgageType[1] = el}" type="radio" name="type" id="type" value="interest">
 				<div class="fake-radio"></div>
 				<span>Interest Only</span>
 			</div>

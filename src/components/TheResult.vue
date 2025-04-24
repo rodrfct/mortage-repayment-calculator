@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import type { ResultInterface } from '@/App.vue';
 
-const calculated = ref<boolean>(true)
-const repayments = 1797.74
+const props = <ResultInterface>defineProps(['result'])
 </script>
 
 <template>
-	<div v-show="!calculated" id="result" class="empty">
+	<div v-if="!result.total" id="result" class="empty">
 		<img src="@/assets/icons/illustration-empty.svg" alt="">
 		<div class="text">
 			<h2>Results shown here</h2>
@@ -16,7 +15,7 @@ const repayments = 1797.74
 			</p>
 		</div>
 	</div>
-	<div v-show="calculated" id="result">
+	<div v-else id="result">
 		<h2>Your results</h2>
 		<p>
 			Your results are shown below based on the information you provided. 
@@ -25,10 +24,10 @@ const repayments = 1797.74
 		<div class="repayments">
 			<div id="shadow"></div>
 			<h3>Your monthly repayments</h3>
-			<span id="monthly">£{{ repayments.toLocaleString() }}</span>
+			<span id="monthly">£{{ result.monthly.toLocaleString() }}</span>
 			<hr>
 			<h3>Total you'll repay over the term</h3>
-			<span id="term">£{{ repayments.toLocaleString() }}</span>
+			<span id="term">£{{ result.total.toLocaleString() }}</span>
 		</div>
 	</div>
 </template>

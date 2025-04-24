@@ -1,12 +1,25 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import TheCalculator from './components/TheCalculator.vue'
 import TheResult from './components/TheResult.vue';
+
+export interface ResultInterface {
+	total: number,
+	monthly: number
+}
+
+const result = ref<ResultInterface>({
+	total: 0,
+	monthly: 0
+})
+
+const algo = ref(3)
 </script>
 
 <template>
 	<div id="calc">
-		<TheCalculator/>
-		<TheResult/>
+		<TheCalculator @calculate="(newVal) => result = newVal"/>
+		<TheResult :result="result"/>
 	</div>
 </template>
 
