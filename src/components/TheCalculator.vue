@@ -12,16 +12,16 @@ const mortgageType = ref<(HTMLInputElement | null)[]>([])
 const inputs = [ mortgageAmount, mortgageTerm, mortgageInterestRate ]
 
 function calculateRepayment(mortgageType: "total" | "interest"): ResultInterface {
-	const interest = parseInt(mortgageInterestRate.value?.value) / 100 * parseInt(mortgageAmount.value?.value);
+	const interest = parseInt(mortgageInterestRate.value!.value) / 100 * parseInt(mortgageAmount.value!.value);
 	if (mortgageType == "total") {
 		return {
-			total: parseInt(mortgageAmount.value?.value) + interest,
-			monthly: ((parseInt(mortgageAmount.value?.value) + interest) / (mortgageTerm.value?.value * 12))
+			total: parseInt(mortgageAmount.value!.value) + interest,
+			monthly: ((parseInt(mortgageAmount.value!.value) + interest) / (parseInt(mortgageTerm.value!.value) * 12))
 		}
 	} else {
 		return {
 			total: interest,
-			monthly: (interest / (parseInt(mortgageTerm.value?.value) * 12))
+			monthly: (interest / (parseInt(mortgageTerm.value!.value) * 12))
 		} 
 	}
 }
@@ -52,7 +52,7 @@ function handleSubmit(): void {
 
 	completed = !type ? false : completed
 
-	if (completed) {
+	if (completed && (type === "total" || type === "interest")) {
 		emit('calculate', calculateRepayment(type))
 	}
 }
@@ -92,12 +92,12 @@ function handleSubmit(): void {
 		<div class="radio-wrapper">
 			<label for="type">Mortgage Type</label>
 			<div class="radio-group">
-				<input :ref="(el) => {mortgageType[0] = el}" type="radio" name="type" id="type" value="total">
+				<input :ref="(el) => {mortgageType[0] = el as HTMLInputElement}" type="radio" name="type" id="type" value="total">
 				<div class="fake-radio"></div>
 				<span>Repayment</span>
 			</div>
 			<div class="radio-group">
-				<input :ref="(el) => {mortgageType[1] = el}" type="radio" name="type" id="type" value="interest">
+				<input :ref="(el) => {mortgageType[1] = el as HTMLInputElement}" type="radio" name="type" id="type" value="interest">
 				<div class="fake-radio"></div>
 				<span>Interest Only</span>
 			</div>
